@@ -1,0 +1,204 @@
+body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(to right, #f7c4e0, #b3d0f7);
+    flex-direction: column;
+    padding: 20px;
+    display: block;
+    justify-content: flex-start;
+    align-items: center;
+    min-height: 100vh; 
+    margin: 0;
+    overflow: auto;
+    
+}
+
+.form-container {
+    width: 100%;
+    max-width: 800px;
+    background: white;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    margin: 20px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center; 
+    justify-content: center;
+    gap : 10px;
+    /* position: relative; */
+}
+
+
+/* .container {
+    display: flex;
+    flex-direction: column; 
+    align-items: center; 
+    width: 100%;
+    max-width: 600px; 
+} */
+
+h1 {
+    color: #9d00d1;
+    font-size: 40px;
+    text-align: center;
+    margin-bottom: 10px;
+}
+
+form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+input[type="text"] {
+    padding: 10px;
+    font-size: 16px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+}
+
+button {
+    padding: 10px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+
+.form-control {
+    margin-top: 10px; 
+}
+
+.card {
+    /* width: 100%; */
+    max-width: 800px;
+    background: white !important;  /* บังคับให้พื้นหลังเป็นสีขาว */
+    border-radius: 10px;
+    box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.2);
+    padding: 20px;
+    margin: 60px auto; /* จัดให้อยู่ตรงกลาง */
+    /* transition: transform 0.2s ease-in-out; */
+    position: relative;
+    clear : both;
+}
+
+.card-content {
+    display: visible;
+    flex-grow: 1;
+    flex-direction: column;
+    gap: 8px;
+    
+}
+
+.table-container {
+    width: 100%;
+    overflow-x: auto; /* เปิดให้เลื่อนแนวนอน */
+    white-space: nowrap; /* ป้องกันการตัดบรรทัด */
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 600px; /* ป้องกันการหดเล็กเกินไป */
+}
+
+@media screen and (max-width: 768px) {
+    .card {
+        width: 100%;
+        padding: 15px;
+    }
+
+    table {
+        min-width: 100%; 
+    }
+
+    .table-container {
+        overflow-x: auto;
+    }
+}
+
+.receipt-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+}
+/* table {
+    width: 100%; 
+    border-collapse: collapse; 
+} */
+
+th, td {
+    text-align: center; /* จัดข้อความกึ่งกลาง */
+    vertical-align: middle; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    padding: 5px; /* ลดขนาดช่อง */
+    font-size: 14px; /* ลดขนาดตัวอักษรเพื่อไม่ให้ล้น */
+    border: 1px solid #ddd; /* เพิ่มเส้นขอบ */
+    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+    width: 10%; /* กำหนดขนาดให้ 1/10 ของช่อง */
+}
+
+th {
+    background-color: #4402c8;
+    color: white;
+}
+
+/* ปุ่มโหลดใบเสร็จ */
+.btn-download {
+    background-color: #1731f6;
+    color: white;
+    border: none;
+    padding: 5px 10px;
+    cursor: pointer;
+    border-radius: 3px;
+    font-size: 14px;
+}
+
+.btn-download:hover {
+    background-color: #bef126ab;
+}
+
+.modal {
+    display: none; 
+    position: fixed; 
+    z-index: 1000;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.4);
+}
+
+/* กล่องเนื้อหา */
+.modal-content {
+    background-color: white;
+    padding: 20px;
+    margin: 15% auto;
+    width: 40%;
+    border-radius: 10px;
+    text-align: center;
+}
+
+/* ปุ่มปิด */
+.close {
+    float: right;
+    font-size: 24px;
+    cursor: pointer;
+}
+
+/* ปุ่มในโมดอล */
+.modal-buttons button {
+    margin: 10px;
+    padding: 10px 20px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.btn-confirm { background-color: #28a745; color: white; }
+.btn-cancel { background-color: #dc3545; color: white; }

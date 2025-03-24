@@ -1,0 +1,286 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>ค้นหาข้อมูลเลขที่สัญญา</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}" />
+    {% comment %} <script src="https://cdn.tailwindcss.com"></script> {% endcomment %}
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"
+    />
+  </head>
+  <body>
+    <div class="form-container">
+        <h1>Softnetwork</h1>
+        <form method="post">
+            {% csrf_token %} 
+            {{ form.as_p }}
+        <button type="submit">
+            <i class="fa-solid fa-magnifying-glass"></i> &nbsp; search
+        </button>
+        </form>
+    </div>
+    {% if result2 %}
+
+    {% for foo in result2 %}
+    <div class="card" style="border: 1px solid black">
+        <div class="card-content">
+            <h2>ผลลัพธ์ที่ค้นหา</h2>
+            <table>
+                <tr>
+                    <td><p>เลขที่สัญญา:</p></td>
+                    <td style="width: 30%"></td>
+                    <td><strong>{{ foo.cont_no }}</strong></td>
+                </tr>
+                <tr>
+                    <td><p>ชื่อ-นามสกุล:</p></td>
+                    <td style="width: 30%"></td>
+                    <td><strong>{{ foo.customer_name }}</strong></td>
+                </tr>
+                <tr>
+                    <td><p>ประเภทสัญญา:</p></td>
+                    <td style="width: 30%"></td>
+                    <td><strong>{{ foo.cont_type_name }}</strong></td>
+                </tr>
+                <tr>
+                    <td><p>เบอร์โทรศัพท์:</p></td>
+                    <td style="width: 30%"></td>
+                    <td><strong>{{ foo.mobile }}</strong></td>
+                </tr>
+
+                <tr>
+                    <td><p>สถานะบัญชี:</p></td>
+                    <td style="width: 30%"></td>
+                    <td><strong> {{ foo.get_cont_status_display }} </strong></td>
+                </tr>
+            </table>
+
+            <button id="toggle-details-{{ forloop.counter }}" onclick="toggleDetails({{ forloop.counter }})">
+                เพิ่มเติม <i id="toggle-icon-{{ forloop.counter }}" class="fa-solid fa-angle-down"></i>
+            </button>
+            <br><br>
+            <div id="additional-details-{{ forloop.counter }}" style="display: none">
+                    <table>
+                        <tr>
+                            <td><p>ข้อมูลลูกหนี้ ณ วันที่ :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ now }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>วันที่เริ่มสัญญา :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.startdate }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>วันที่ชำระล่าสุด :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.lastpaydate }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>ครบกำหนดชำระครั้งถัดไป :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.nextdate }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>ชำระค่างวดแล้ว :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.moneytotal }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>ชำระเงินต้น :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.cashspended }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>ชำระดอกเบี้ย :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.fee_spended }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>จำนวนงวดค้างชำระ :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.over_due_period }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>จำนวนงวดที่เหลือ :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo. }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>ค่างวดค้างชำระ :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.moneyfirst_over_due }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>จำนวนค้างชำระทั้งหมด :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.moneyfirst_over_due }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>ยอดปิดบัญชี :</p></td>
+                            <td style="width: 45%"></td>
+                            <td><strong>{{ foo.money_closeacc }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>เงินต้นคงเหลือ :</p></td>
+                            <td style="width: 45%"></td>
+                            <td>
+                                <strong>
+                                {% if foo.moneypricipal_remain %}
+                                    {{ foo.moneypricipal_remain }} 
+                                {% else %}
+                                    <p>-</p>
+                                {% endif %}
+                                </strong>
+                            </td>
+                        </tr>
+                    </table>
+            </div>
+        </div>
+        <button id="toggle-history-{{ forloop.counter }}" onclick="toggleHistory({{ forloop.counter }})">
+            ประวัติการชำระเงิน
+            <i id="toggle-icon_{{ forloop.counter }}" class="fa-solid fa-angle-down"></i>
+        </button>
+        <br> <br>
+        <div id="additional-{{ forloop.counter }}" style="display: none" class = "table-container">
+            <table class="receipt-table" border = "2">
+                <thead>
+                    <tr>
+                        <th>ลำดับ</th>
+                        <th>เลขที่ใบเสร็จ</th>
+                        <th>วันที่ใบเสร็จ</th>
+                        <th>ชำระค่า</th>
+                        <th>ยอดชำระ</th>
+                        <th>เงินต้น</th>
+                        <th>ดอกเบี้ย</th>
+                        <th>ส่วนลด</th>
+                        <th>ยอดรวมชำระ</th>
+                        <th>สถานะใบเสร็จ</th>                    
+                        <th>โหลดใบเสร็จ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for joo in result3  %}
+                    <tr>
+                        <td><strong>{{ forloop.counter }}</strong></td>
+                        <td><strong>{{ joo.payment_no }}</strong></td>
+                        <td><strong>{{ joo.paydate }}</strong></td>
+                        <td><strong>{{ joo.payfor_name }}</strong></td>
+                        <td><strong>{{ joo.paymentspended }}</strong></td>
+                        <td><strong>{{ joo.moneyfirst_paid }}</strong></td>
+                        <td><strong>{{ joo.money_r_finish }}</strong></td>
+                        <td><strong>{{ joo.discount_pay }}</strong></td>
+                        <td><strong>{{ joo.moneytotal }}</strong></td>
+                        <td><strong>{{ joo.status_name }}</strong></td>
+                        <td>
+                            {% comment %} # onclick="openReceiptModal('{{ foo.cont_no }}', '{{ joo.payment_id }}')" {% endcomment %}
+                            <button  type="submit" onclick="submitForm('{{ joo.payment_no }}')">
+                                ออกใบเสร็จ
+                            </button> 
+                        </td>
+
+                        <form action="{% url 'receipt_pdf'%}" autocomplete="off" method="GET" target="_blank" id="form_{{ joo.payment_no }}">
+    
+                            <input type="hidden" id="reportnm" name="report" value="LINEOA_test.fr3">
+                            <input type="hidden" name="fm" value="PDF">
+                            <input type="hidden" name="p_no" value="{{ joo.payment_no }}">
+                            <input type="hidden" name="p_date"  value="{{ joo.paydate }}">
+                            <input type="hidden" name="pf_name" value="{{ joo.payfor_name }}">
+                            <input type="hidden" name="s_ped" value="{{ joo.paymentspended }}">
+                            <input type="hidden" name="mf_paid" value="{{ joo.moneyfirst_paid }}">
+                            <input type="hidden" name="r_paid" value="{{ joo.money_r_finish }}">
+                            <input type="hidden" name="dis_paid" value="{{ joo.discount_pay }}">
+                            <input type="hidden" name="total" value="{{ joo.moneytotal }}">
+                            <input type="hidden" name="stt" value="{{ joo.status_name }}">
+                        </form>
+                    </tr>        
+                    {% endfor %}   
+                </tbody>
+            </table>
+        </div>
+    </div>
+    {% endfor %}
+    {% elif result2 is None %}
+    <p>ไม่พบข้อมูลตามเลขที่สัญญาที่กรอก</p>
+    {% endif %}
+
+    <!-- โมดัลยืนยัน -->
+    {% comment %} {% for joo in result3  %}
+    <div id="receiptModal" class="modal">
+        <div class="modal-content">
+            <span class="close" onclick="closeReceiptModal()">&times;</span>
+            <h2>ยืนยันการสร้างใบเสร็จ</h2>
+            <p id="modalText">กำลังสร้างใบเสร็จ...</p>
+            <div class="modal-buttons">
+                <a href="{% url 'receipt_pdf' payment_id=joo.payment_id   s%}" autocomplete="off" method="GET" target="_blank">
+                    <button type="submit" id="submitBtn" class="btn-confirm">
+                        <p>ตกลง</p>
+                    </button>      
+                </a>
+                <button class="btn-cancel" onclick="closeReceiptModal()">
+                    <P>ยกเลิก</P>
+                </button>
+            </div>
+        </div>
+    </div>
+    {% endfor %} {% endcomment %}
+
+    <script>
+      function toggleDetails(index) {
+        const details = document.getElementById("additional-details-" + index);
+        const icon = document.getElementById("toggle-icon-" + index);
+        if (details.style.display === "none") {
+          details.style.display = "block";
+          icon.classList.remove("fa-angle-down");
+          icon.classList.add("fa-angle-up");
+        } else {
+          details.style.display = "none";
+          icon.classList.remove("fa-angle-up");
+          icon.classList.add("fa-angle-down");
+        }
+      }
+      function toggleHistory(index) {
+        const details = document.getElementById("additional-" + index);
+        const icon = document.getElementById("toggle-icon_" + index);
+        if (details.style.display === "none") {
+          details.style.display = "block";
+          icon.classList.remove("fa-angle-down");
+          icon.classList.add("fa-angle-up");
+        } else {
+          details.style.display = "none";
+          icon.classList.remove("fa-angle-up");
+          icon.classList.add("fa-angle-down");
+        }
+      }
+
+
+
+    let contractNo, payment_Id;
+
+    function openReceiptModal(cNo, pId) {
+        // อัปเดตข้อความในโมดัล
+        document.getElementById("modalText").innerText = 
+            `ต้องการออกใบเสร็จสำหรับสัญญา ${cNo} และการชำระเงิน ${pId} หรือไม่?`;
+    
+        // แสดงโมดัล
+        document.getElementById("receiptModal").style.display = "block";
+    }
+    
+    // ปิดโมดอล
+    function closeReceiptModal() {
+        document.getElementById("receiptModal").style.display = "none";
+    }
+
+
+window.open(url, "_blank");
+    function submitForm(paymentNo) {
+        document.getElementById('form_' + paymentNo).submit();
+    }
+    
+    </script>
+  </body>
+</html>
