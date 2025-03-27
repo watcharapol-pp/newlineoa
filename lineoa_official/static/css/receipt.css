@@ -1,0 +1,51 @@
+@font-face {
+    font-family: 'THSarabunNew';
+    src: url('/static/fonts/THSarabunNew.ttf') format('truetype');
+}
+
+@page {
+    size: A4 landscape; /* ตั้งค่า A4 แนวนอน */
+    margin: 20px;
+}
+
+body {
+    font-family: 'THSarabunNew', sans-serif;
+    font-size: 18pt;
+    text-align: left;
+}
+
+h1 {
+    font-size: 24pt;
+    font-weight: bold;
+    text-align: center; /* ทำให้หัวข้ออยู่ตรงกลาง */
+    margin-bottom: 10px;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+table, th, td {
+    border: 1px solid black;
+}
+
+th, td {
+    padding: 8px;
+    text-align: center;
+    font-weight: bold;  /* ตัวอักษรหนาขึ้น */
+    font-size: 16pt;
+}
+
+th {
+    background-color: #f2f2f2; /* สีเทา */
+    color: black;
+}
+
+.footer {
+    margin-top: 30px;
+    text-align: right;
+    font-size: 16pt;
+}
+

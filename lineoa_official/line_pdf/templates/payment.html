@@ -1,0 +1,53 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    
+    <link rel="stylesheet" type="text/css" href="{% static 'css/receipt.css' %}">
+</head>
+<body>
+    <h1>ใบเสร็จการชำระ</h1>
+    {% for joo in pay %}
+        <p>เลขที่ใบเสร็จ: {{ joo.payment_no }}</p>
+        <p>วันที่ ณ ที่ออกใบเสร็จ: {{ now }}</p>
+    {% endfor %}
+    
+    
+    <!-- ตารางข้อมูลการชำระ -->
+    <table>
+        <thead>
+            <tr>
+                <th><strong> ลำดับที่ </strong></th>
+                <th><strong> เลขที่ใบเสร็จ </strong></th>
+                <th><strong> รายการการชำระ </strong></th>
+                <th><strong> วันที่ชำระ </strong></th>
+                <th><strong> เงินต้น </strong></th>
+                <th><strong>ดอกเบี้ย </strong></th>
+                <th><strong> ส่วนลด </strong></th>
+                <th><strong> ยอดชำระทั้งหมด </strong></th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for foo in pay %}
+            <tr>
+                <td>{{ forloop.counter }}</td>
+                <td>{{ foo.payment_no }}</td>
+                <td>{{ foo.payfor_name }}</td>
+                <td>{{ foo.paydate }}</td>
+                <td>{{ foo.moneyfirst_paid }}</td>
+                <td>{{ foo.money_r_finish }}</td>
+                <td>{{ foo.discount_pay }}</td>
+                <td>{{ foo.moneytotal }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- วันที่ปัจจุบัน -->
+    <div class="footer">
+        <p>วันที่ ณ ที่ออกใบเสร็จ: {{ now }}</p>
+    </div>
+</body>
+</html>

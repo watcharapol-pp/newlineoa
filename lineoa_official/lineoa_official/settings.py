@@ -101,7 +101,7 @@ FR_SERVER = {
         'PROTOCOL': 'http',
         'HOST': 'localhost',
         'PORT': '8099',
-    }
+}
 
 # {
 #     'default': {

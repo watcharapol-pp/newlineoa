@@ -1,6 +1,6 @@
 from django.urls import path
 from . import views
-from line_pdf.views import print_report
+# from line_pdf.views import generate_pdf
 
 urlpatterns = [
     path('contracts/', views.ContractInfoForm, name='ContractInfoForm'),

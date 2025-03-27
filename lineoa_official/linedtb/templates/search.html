@@ -18,10 +18,19 @@
         <h1>Softnetwork</h1>
         <form method="post">
             {% csrf_token %} 
-            {{ form.as_p }}
-        <button type="submit">
-            <i class="fa-solid fa-magnifying-glass"></i> &nbsp; search
-        </button>
+            <p>
+                {{ form.card_no.label_tag }}  
+                {{ form.card_no }}
+            </p>
+            {% comment %} {{ form.as_p }} {% endcomment %}
+            {% if form.card_no.errors %}
+                <div style="color: red; font-size: 14px;">
+                    {{ form.card_no.errors.0 }}
+                </div>
+            {% endif %}
+            <button type="submit">
+                <i class="fa-solid fa-magnifying-glass"></i> &nbsp; search
+            </button>
         </form>
     </div>
     {% if result2 %}
@@ -105,11 +114,11 @@
                             <td style="width: 45%"></td>
                             <td><strong>{{ foo.over_due_period }}</strong></td>
                         </tr>
-                        <tr>
-                            <td><p>จำนวนงวดที่เหลือ :</p></td>
+                        {% comment %} <tr>
+                            <td><p>จำนวน :</p></td>
                             <td style="width: 45%"></td>
                             <td><strong>{{ foo. }}</strong></td>
-                        </tr>
+                        </tr> {% endcomment %}
                         <tr>
                             <td><p>ค่างวดค้างชำระ :</p></td>
                             <td style="width: 45%"></td>
@@ -175,28 +184,36 @@
                         <td><strong>{{ joo.money_r_finish }}</strong></td>
                         <td><strong>{{ joo.discount_pay }}</strong></td>
                         <td><strong>{{ joo.moneytotal }}</strong></td>
-                        <td><strong>{{ joo.status_name }}</strong></td>
+                        <td  style="font-weight: bold; color: {% if joo.status_name == 'Active' %}green
+                            {% elif joo.status_name == 'Cancel' %}red
+                            {% else %}black
+                            {% endif %};"><strong>{{ joo.status_name }}</strong></td>
                         <td>
                             {% comment %} # onclick="openReceiptModal('{{ foo.cont_no }}', '{{ joo.payment_id }}')" {% endcomment %}
-                            <button  type="submit" onclick="submitForm('{{ joo.payment_no }}')">
+                            {% comment %} <button  type="submit" onclick="submitForm('{{ joo.payment_no }}')">
                                 ออกใบเสร็จ
-                            </button> 
+                            </button>  {% endcomment %}
+                            <a href="{% url 'receipt' %}?payment_no={{ joo.payment_no }}&payfor_name={{ joo.payfor_name }}" target="_blank">   
+                                <button>
+                                    <p>ออกใบเสร็จ</p>
+                                </button>       
+                            </a>
                         </td>
 
-                        <form action="{% url 'receipt_pdf'%}" autocomplete="off" method="GET" target="_blank" id="form_{{ joo.payment_no }}">
+                        {% comment %} <form action="{% url 'receipt'%}" method="post">
     
-                            <input type="hidden" id="reportnm" name="report" value="LINEOA_test.fr3">
-                            <input type="hidden" name="fm" value="PDF">
-                            <input type="hidden" name="p_no" value="{{ joo.payment_no }}">
-                            <input type="hidden" name="p_date"  value="{{ joo.paydate }}">
-                            <input type="hidden" name="pf_name" value="{{ joo.payfor_name }}">
-                            <input type="hidden" name="s_ped" value="{{ joo.paymentspended }}">
-                            <input type="hidden" name="mf_paid" value="{{ joo.moneyfirst_paid }}">
-                            <input type="hidden" name="r_paid" value="{{ joo.money_r_finish }}">
-                            <input type="hidden" name="dis_paid" value="{{ joo.discount_pay }}">
-                            <input type="hidden" name="total" value="{{ joo.moneytotal }}">
-                            <input type="hidden" name="stt" value="{{ joo.status_name }}">
-                        </form>
+                            {% csrf_token %}
+                            
+                                <input type="hidden" name="payment_no" value="{{ joo.payment_no }}">
+                                <input type="hidden" name="paydate" value="{{ joo.paydate }}">
+                                <input type="hidden" name="payfor_name" value="{{ joo.payfor_name }}">
+                                <input type="hidden" name="paymentspended" value="{{ joo.paymentspended }}">
+                                <input type="hidden" name="moneyfirst_paid" value="{{ joo.moneyfirst_paid }}">
+                                <input type="hidden" name="money_r_finish" value="{{ joo.money_r_finish }}">
+                                <input type="hidden" name="discount_pay" value="{{ joo.discount_pay }}">
+                                <input type="hidden" name="moneytotal" value="{{ joo.moneytotal }}">
+                                <input type="hidden" name="status_name" value="{{ joo.status_name }}">
+                        </form> {% endcomment %}
                     </tr>        
                     {% endfor %}   
                 </tbody>
@@ -259,7 +276,7 @@
 
 
 
-    let contractNo, payment_Id;
+    {% comment %} let contractNo, payment_Id;
 
     function openReceiptModal(cNo, pId) {
         // อัปเดตข้อความในโมดัล
@@ -273,13 +290,25 @@
     // ปิดโมดอล
     function closeReceiptModal() {
         document.getElementById("receiptModal").style.display = "none";
-    }
+    } {% endcomment %}
+
+    {% comment %} function submitForm(paymentNo) {
+        let form = document.getElementById("form_" + paymentNo);
+    
+        // สร้าง URL ใหม่และ encode ค่าทั้งหมด
+        let params = new URLSearchParams(new FormData(form)).toString();
+    
+        // เปิดหน้าต่างใหม่ไปยัง URL ที่ encode แล้ว
+        window.open(form.action + "?" + params, "_blank");
+    } {% endcomment %}
 
 
-window.open(url, "_blank");
-    function submitForm(paymentNo) {
-        document.getElementById('form_' + paymentNo).submit();
-    }
+    {% comment %} window.open(url, "_blank"); {% endcomment %}
+    {% comment %} function submitForm(paymentNo) {
+        let form = document.getElementById('form_' + paymentNo).submit();
+        let params = new URLSearchParams(new FormData(form)).toString();
+        window.open(form.action + "?" + params, "_blank");
+    } {% endcomment %}
     
     </script>
   </body>
