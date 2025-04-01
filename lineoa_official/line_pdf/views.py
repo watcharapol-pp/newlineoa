@@ -14,9 +14,8 @@ def generate_pdf(request):
     pay_no = request.GET.get('payment_no')
     pay_name = request.GET.get('payfor_name')
 
-    # pay_no = request.GET.get('payment_no')
-
     pay = Contractpaymentdetail.objects.filter(payment_no=pay_no, payfor_name=pay_name, status='A')
+    print(pay, '1')
     print(pay_no)
     print(pay_name)
 

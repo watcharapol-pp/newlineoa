@@ -21,7 +21,11 @@ from line_detailpayment.models import LineOA_contract
 from .forms import SearchForm
 from django.views.decorators.csrf import csrf_exempt
 
+from django.views.decorators.cache import never_cache
+
+
 @csrf_exempt
+@never_cache
 def ContractInfoForm(request):
     form = SearchForm(request.POST or None)
     result = None

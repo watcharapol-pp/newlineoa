@@ -160,6 +160,8 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 
+
+
 FASTREPORT_API_URL = "https://api.fastreport.com/api/report"  # URL ของ FastReport Server หรือ Cloud API
 
 FASTREPORT_API_TOKEN = "your_api_token"
