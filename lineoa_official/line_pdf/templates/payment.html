@@ -9,14 +9,14 @@
 </head>
 <body>
     <h1>ใบเสร็จการชำระ</h1>
-    {% for joo in pay %}
+    {% comment %} {% for joo in pay %}
         <p>เลขที่ใบเสร็จ: {{ joo.payment_no }}</p>
         <p>วันที่ ณ ที่ออกใบเสร็จ: {{ now }}</p>
-    {% endfor %}
+    {% endfor %} {% endcomment %}
     
     
     <!-- ตารางข้อมูลการชำระ -->
-    <table>
+    {% comment %} <table>
         <thead>
             <tr>
                 <th><strong> ลำดับที่ </strong></th>
@@ -43,11 +43,144 @@
             </tr>
             {% endfor %}
         </tbody>
-    </table>
+    </table> {% endcomment %}
 
     <!-- วันที่ปัจจุบัน -->
-    <div class="footer">
+    {% comment %} <div class="footer">
         <p>วันที่ ณ ที่ออกใบเสร็จ: {{ now }}</p>
+    </div> {% endcomment %}
+
+    <!-- ข้อมูลบริษัท -->
+
+    <div class="invoice-box">
+        <table cellpadding="0" cellspacing="0">
+            
+            <tr class="information">
+                <td colspan="2">
+                    <table>
+                        {% for joo in pay %}
+                        <tr>
+                            <td>
+                                เลขที่ใบเสร็จ: {{ joo.payment_no }}
+                            </td>
+                            
+                            <td>
+                                วันที่ ณ ที่ออกใบเสร็จ: {{ now }}
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                รหัสประจำสำนักงาน: {{ joo.branch_id }}
+                            </td>  
+                        </tr>
+                        {% endfor %}
+                    </table>
+                </td> 
+            </tr>
+            
+            <tr class="heading">
+                <td>
+                    ข้อมูลลูกหนี้
+                </td>
+                <td>
+                    รายการข้อมูล
+                </td>
+            </tr>
+            
+            {% for foo in pay %}
+            <tr class="details">
+                <td>
+                    <strong>รายการการชำระ </strong>
+                </td>
+                <td>
+                    {{ foo.payfor_name }}
+                </td>
+            </tr>
+
+            <tr class="details">
+                <td>
+                    <strong> เลขที่ใบเสร็จ </strong>
+                </td>
+                
+                <td>
+                    {{ foo.payment_no }}
+                </td>
+            </tr>
+
+            <tr class="details">
+                <td>
+                    <strong> วันที่ชำระ </strong>
+                </td>
+                
+                <td>
+                    {{ foo.paydate }}
+                </td>
+            </tr>
+            {% endfor %}
+            
+            <tr class="heading">
+                <td>
+                    ประเภทการจ่าย
+                </td>
+                
+                <td>
+                    ยอดชำระ
+                </td>
+            </tr>
+
+            {% for foo in pay %}
+
+            <tr class="details">
+                <td>
+                    <strong> เงินต้น </strong>
+                </td>
+                
+                <td>
+                    {{ foo.moneyfirst_paid }}
+                </td>
+            </tr>
+
+            <tr class="details">
+                <td>
+                    <strong> ดอกเบี้ย </strong>
+                </td>
+                
+                <td>
+                    {{ foo.money_r_finish }}
+                </td>
+            </tr>
+
+            <tr class="details">
+                <td>
+                    <strong> ส่วนลด </strong>
+                </td>
+                
+                <td>
+                    {{ foo.discount_pay }}
+                </td>
+            </tr>
+
+            <tr class="details">
+                <td>
+                    <strong> ยอดชำระทั้งหมด </strong>
+                </td>
+                
+                <td>
+                    {{ foo.moneytotal }}
+                </td>
+            </tr>
+            <tr class="total">
+                <td></td>
+                
+                <td>
+                   Total: {{ foo.moneytotal }}
+                </td>
+            </tr>
+            {% endfor %}
+        </table>
     </div>
+    {% comment %} <div class="footer">
+        <p>วันที่ ณ ที่ออกใบเสร็จ: {{ now }}</p>
+    </div> {% endcomment %}
 </body>
 </html>
