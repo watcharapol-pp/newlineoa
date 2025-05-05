@@ -1,4 +1,5 @@
 {% load static %}
+{% comment %} {% load static humanize %} {% endcomment %}
 
 <!DOCTYPE html>
 <html lang="en">
@@ -16,11 +17,21 @@
   <body>
     <div class="form-container">
         <h1>Softnetwork</h1>
-        <form method="post">
+        <form method="post" id="searchForm">
             {% csrf_token %} 
-            <p>
-                {{ form.card_no.label_tag }}  
-                {{ form.card_no }}
+            <p style="position: relative; display: inline-block; width: 100%;">
+                {{ form.card_no.label_tag }} 
+                <span style="position: relative; display: inline-block;">
+                    {{ form.card_no }}
+                    <span id="charCount" style="
+                        position: absolute;
+                        right: 10px;
+                        top: 50%;
+                        transform: translateY(-50%);
+                        font-size: 14px; ">
+                        0/13
+                    </span>
+                </span>
             </p>
             {% comment %} {{ form.as_p }} {% endcomment %}
             {% if form.card_no.errors %}
@@ -28,7 +39,7 @@
                     {{ form.card_no.errors.0 }}
                 </div>
             {% endif %}
-            <button type="submit">
+            <button type="submit" class="submitbtn">
                 <i class="fa-solid fa-magnifying-glass"></i> &nbsp; search
             </button>
         </form>
@@ -36,82 +47,106 @@
     {% if result2 %}
 
     {% for foo in result2 %}
-    <div class="card" style="border: 1px solid black">
+    <div id="card-{{ forloop.counter }}" class="card card-{{ forloop.counter0 }}" style="border: 2px solid black">
         <div class="card-content">
-            <h2>ผลลัพธ์ที่ค้นหา</h2>
-            <table>
-                <tr>
-                    <td><p>เลขที่สัญญา:</p></td>
-                    {% comment %} <td style="width: 30%"></td> {% endcomment %}
-                    <td><strong>{{ foo.cont_no }}</strong></td>
-                </tr>
-                <tr>
-                    <td><p>ชื่อ-นามสกุล:</p></td>
-                    {% comment %} <td style="width: 30%"></td> {% endcomment %}
-                    <td><strong>{{ foo.customer_name }}</strong></td>
-                </tr>
-                <tr>
-                    <td><p>ประเภทสัญญา:</p></td>
-                    {% comment %} <td style="width: 30%"></td> {% endcomment %}
-                    <td><strong>{{ foo.cont_type_name }}</strong></td>
-                </tr>
-                <tr>
-                    <td><p>เบอร์โทรศัพท์:</p></td>
-                    {% comment %} <td style="width: 30%"></td> {% endcomment %}
-                    <td><strong>{{ foo.mobile }}</strong></td>
-                </tr>
+            <li>สินเชื่อที่ทำสัญญา เลขที่<br>
+                <hr style="margin: 4px 0;">
+                <span style="color: #3674B5">{{ foo.cont_no }}</span>
+            </li>
+                <br>
+                <div class="navbar">
+                    <button id="toggle-information-{{ forloop.counter }}"  class="custom-button info-button" onclick="toggleSection('information', {{ forloop.counter }})">
+                        <i class="fa-solid fa-file-contract"></i> &nbsp;
+                        ข้อมูลสินเชื่อที่ทำสัญญา
+                        <i id="toggle-icon+{{ forloop.counter }}" class="fa-solid fa-angle-down"></i>
+                    </button>
+                    <button id="toggle-history-{{ forloop.counter }}"  class="custom-button history-button" onclick="toggleSection('history', {{ forloop.counter }})">
+                        <i class="fa-solid fa-clock-rotate-left"></i>&nbsp; ประวัติการชำระเงิน
+                        
+                        <i id="toggle-icon_{{ forloop.counter }}" class="fa-solid fa-angle-down"></i>
+                    </button>
+                    <button id="toggle-details-{{ forloop.counter }}"  class="custom-button details-button"  onclick="toggleSection('details', {{ forloop.counter }})">
+                        <i class="fa-solid fa-circle-info"></i> &nbsp;
+                        ข้อมูลเพิ่มเติม <i id="toggle-icon-{{ forloop.counter }}" class="fa-solid fa-angle-down"></i>
+                    </button>
+                    <button id="toggle-ContractTable-{{ forloop.counter }}"  class="custom-button contract-button"  onclick="toggleSection('contractTable', {{ forloop.counter }})">
+                        <i class="fa-solid fa-table"></i> &nbsp;
+                        ตารางสัญญา <i id="toggle-icon--{{ forloop.counter }}" class="fa-solid fa-angle-down"></i>
+                    </button>
+                    {% comment %} <button id="toggle-security-{{ forloop.counter }}"  class="custom-button security-button"  onclick="toggleSection('security', {{ forloop.counter }})">
+                        <i class="fa-solid fa-table"></i> &nbsp;
+                        ข้อมูลหลักทรัพย์ <i id="toggle-icon-_{{ forloop.counter }}" class="fa-solid fa-angle-down"></i>
+                    </button> {% endcomment %}
+                    
+                </div>
+                <div id="additional-information-{{ forloop.counter }}" style="display: none">
+                    <table>
+                        <tr>
+                            <td><p>เลขที่สัญญา:</p></td>
+                            <td><strong>{{ foo.cont_no }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>ชื่อ-นามสกุล:</p></td>
+                            <td><strong>{{ foo.customer_name }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>ประเภทสัญญา:</p></td>
+                            <td><strong>{{ foo.cont_type_name }}</strong></td>
+                        </tr>
+                        <tr>
+                            <td><p>เบอร์โทรศัพท์:</p></td>
+                            <td><strong>{{ foo.mobile }}</strong></td>
+                        </tr>
 
-                <tr>
-                    <td><p>สถานะบัญชี:</p></td>
-                    {% comment %} <td style="width: 30%"></td> {% endcomment %}
-                    <td><strong> {{ foo.get_cont_status_display }} </strong></td>
-                </tr>
-            </table>
-            <br>
-
-            <button id="toggle-details-{{ forloop.counter }}" onclick="toggleDetails({{ forloop.counter }})">
-                เพิ่มเติม <i id="toggle-icon-{{ forloop.counter }}" class="fa-solid fa-angle-down"></i>
-            </button>
-            <div id="additional-details-{{ forloop.counter }}" style="display: none">
+                        <tr>
+                            <td><p>สถานะบัญชี:</p></td>
+                            <td><strong style="
+                                {% if foo.cont_status == 'V' %}
+                                    color: red;
+                                {% elif foo.cont_status == 'C' %}
+                                    color: black;
+                                {% elif foo.cont_status == 'T' %}
+                                    color: orange;
+                                {% elif foo.cont_status == 'A' %}
+                                    color: green;
+                                {% endif %}
+                            "> {{ foo.get_cont_status_display }} </strong></td>
+                        </tr>
+                    </table>
+                </div>
+                <br>
+                <div id="additional-details-{{ forloop.counter }}" style="display: none">
                     <table>
                         <tr>
                             <td><p>ข้อมูลลูกหนี้ ณ วันที่ :</p></td>
-                            {% comment %} <td style="width: 20%"></td> {% endcomment %}
                             <td><strong>{{ now }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>วันที่เริ่มสัญญา :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
-                            <td><strong>{{ foo.startdate }}</strong></td>
+                            <td><strong>{{ foo.startdate|safe }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>วันที่ชำระล่าสุด :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
-                            <td><strong>{{ foo.lastpaydate }}</strong></td>
+                            <td><strong>{{ foo.lastpaydate|safe }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>ครบกำหนดชำระครั้งถัดไป :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
-                            <td><strong>{{ foo.nextdate }}</strong></td>
+                            <td><strong>{{ foo.nextdate|safe }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>ชำระค่างวดแล้ว :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
                             <td><strong>{{ foo.moneytotal }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>ชำระเงินต้น :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
                             <td><strong>{{ foo.cashspended }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>ชำระดอกเบี้ย :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
                             <td><strong>{{ foo.fee_spended }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>จำนวนงวดค้างชำระ :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
                             <td><strong>{{ foo.over_due_period }}</strong></td>
                         </tr>
                         {% comment %} <tr>
@@ -121,22 +156,18 @@
                         </tr> {% endcomment %}
                         <tr>
                             <td><p>ค่างวดค้างชำระ :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
                             <td><strong>{{ foo.moneyfirst_over_due }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>จำนวนค้างชำระทั้งหมด :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
                             <td><strong>{{ foo.moneyfirst_over_due }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>ยอดปิดบัญชี :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
                             <td><strong>{{ foo.money_closeacc }}</strong></td>
                         </tr>
                         <tr>
                             <td><p>เงินต้นคงเหลือ :</p></td>
-                            {% comment %} <td style="width: 45%"></td> {% endcomment %}
                             <td>
                                 <strong>
                                 {% if foo.moneypricipal_remain %}
@@ -148,13 +179,9 @@
                             </td>
                         </tr>
                     </table>
-            </div>
+                </div>
         </div>
-        <button id="toggle-history-{{ forloop.counter }}" onclick="toggleHistory({{ forloop.counter }})">
-            ประวัติการชำระเงิน
-            <i id="toggle-icon_{{ forloop.counter }}" class="fa-solid fa-angle-down"></i>
-        </button>
-        <br> <br>
+        
         <div id="additional-{{ forloop.counter }}" style="display: none" class = "table-container">
             <table class="receipt-table" border = "2">
                 <thead>
@@ -167,55 +194,199 @@
                         <th>เงินต้น</th>
                         <th>ดอกเบี้ย</th>
                         <th>ส่วนลด</th>
-                        <th>ยอดรวมชำระ</th>
+                        <th>Total</th>
                         <th>สถานะใบเสร็จ</th>                    
-                        <th>โหลดใบเสร็จ</th>
+                        <th> <i class="fa fa-print" aria-hidden="true"></i></th>
                     </tr>
                 </thead>
                 <tbody>
-                    {% for joo in result3  %}
-                    <tr>
-                        <td><strong>{{ forloop.counter }}</strong></td>
-                        <td><strong>{{ joo.payment_no }}</strong></td>
-                        <td><strong>{{ joo.paydate }}</strong></td>
-                        <td><strong>{{ joo.payfor_name }}</strong></td>
-                        <td><strong>{{ joo.paymentspended }}</strong></td>
-                        <td><strong>{{ joo.moneyfirst_paid }}</strong></td>
-                        <td><strong>{{ joo.money_r_finish }}</strong></td>
-                        <td><strong>{{ joo.discount_pay }}</strong></td>
-                        <td><strong>{{ joo.moneytotal }}</strong></td>
-                        <td  style="font-weight: bold; color: {% if joo.status_name == 'Active' %}green
-                            {% elif joo.status_name == 'Cancel' %}red
-                            {% else %}black
-                            {% endif %};"><strong>{{ joo.status_name }}</strong></td>
-                        <td>
-                            {% comment %} # onclick="openReceiptModal('{{ foo.cont_no }}', '{{ joo.payment_id }}')" {% endcomment %}
-                            {% comment %} <button  type="submit" onclick="submitForm('{{ joo.payment_no }}')">
-                                ออกใบเสร็จ
-                            </button>  {% endcomment %}
-                            <a href="{% url 'receipt' %}?payment_no={{ joo.payment_no }}&payfor_name={{ joo.payfor_name }}" target="_blank">   
-                                <button>
-                                    <p>ออกใบเสร็จ</p>
-                                </button>       
-                            </a>
-                        </td>
+                    {% comment %} {% if payment_data %} {% endcomment %}
+                        <ul>
+                            {% for joo in result3  %}
+                                {% comment %} {% for payment in joo  %} {% endcomment %}
+                                    {% comment %} {% if foo.cont_no == payment.cont_no %} {% endcomment %}
+                                        <tr>
+                                            <td class="tb"><strong>{{ forloop.counter }}</strong></td>
+                                            <td class="tb"><strong>{{ joo.payment_no }}</strong></td>
+                                            <td class="tb"><strong>{{ joo.paydate }}</strong></td>
+                                            <td class="tb"><strong>{{ joo.payfor_name }}</strong></td>
+                                            <td class="tb"><strong>{{ joo.paymentspended }}</strong></td>
+                                            <td class="tb"><strong>{{ joo.moneyfirst_paid }}</strong></td>
+                                            <td class="tb"><strong>{{ joo.money_r_finish }}</strong></td>
+                                            <td class="tb"><strong>{{ joo.discount_pay }}</strong></td>
+                                            <td class="tb"><strong>{{ joo.moneytotal }}</strong></td>
+                                            <td class="tb" style="font-weight: bold; color: {% if joo.status_name == 'Active' %}green
+                                                {% elif joo.status_name == 'Cancel' %}red
+                                                {% else %}black
+                                                {% endif %};"><strong>{{ joo.status_name }}</strong></td>
+                                            <td>
+                                                {% comment %} # onclick="openReceiptModal('{{ foo.cont_no }}', '{{ joo.payment_id }}')" {% endcomment %}
+                                                {% comment %} <button  type="submit" onclick="submitForm('{{ joo.payment_no }}')">
+                                                    ออกใบเสร็จ
+                                                </button>  {% endcomment %}
+                                                <a href="{% url 'receipt' %}?payment_no={{ joo.payment_no }}&payfor_name={{ joo.payfor_name }}" target="_blank">   
+                                                    <button class="receiptbtn">
+                                                        <i class="fa fa-print" aria-hidden="true"></i>&nbsp; Print receipt
+                                                    </button>       
+                                                </a>
+                                            </td>
+                    
+                                            {% comment %} <form action="{% url 'receipt'%}" method="post">
+                        
+                                                {% csrf_token %}
+                                                
+                                                    <input type="hidden" name="payment_no" value="{{ joo.payment_no }}">
+                                                    <input type="hidden" name="paydate" value="{{ joo.paydate }}">
+                                                    <input type="hidden" name="payfor_name" value="{{ joo.payfor_name }}">
+                                                    <input type="hidden" name="paymentspended" value="{{ joo.paymentspended }}">
+                                                    <input type="hidden" name="moneyfirst_paid" value="{{ joo.moneyfirst_paid }}">
+                                                    <input type="hidden" name="money_r_finish" value="{{ joo.money_r_finish }}">
+                                                    <input type="hidden" name="discount_pay" value="{{ joo.discount_pay }}">
+                                                    <input type="hidden" name="moneytotal" value="{{ joo.moneytotal }}">
+                                                    <input type="hidden" name="status_name" value="{{ joo.status_name }}">
+                                            </form> {% endcomment %}
+                                        </tr>
+                                    {% comment %} {% endif %} {% endcomment %}
+                                
+                                {% comment %} {% endfor %} {% endcomment %}
+                                    
+                            {% endfor %}  
 
-                        {% comment %} <form action="{% url 'receipt'%}" method="post">
-    
-                            {% csrf_token %}
-                            
-                                <input type="hidden" name="payment_no" value="{{ joo.payment_no }}">
-                                <input type="hidden" name="paydate" value="{{ joo.paydate }}">
-                                <input type="hidden" name="payfor_name" value="{{ joo.payfor_name }}">
-                                <input type="hidden" name="paymentspended" value="{{ joo.paymentspended }}">
-                                <input type="hidden" name="moneyfirst_paid" value="{{ joo.moneyfirst_paid }}">
-                                <input type="hidden" name="money_r_finish" value="{{ joo.money_r_finish }}">
-                                <input type="hidden" name="discount_pay" value="{{ joo.discount_pay }}">
-                                <input type="hidden" name="moneytotal" value="{{ joo.moneytotal }}">
-                                <input type="hidden" name="status_name" value="{{ joo.status_name }}">
-                        </form> {% endcomment %}
-                    </tr>        
-                    {% endfor %}   
+
+                        </ul>
+                    
+                    {% comment %} {% endif %} {% endcomment %}
+                     
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="2" class="total-row">ยอดรวม</td>
+                        <td class="total-row"></td>
+                        <td class="total-row"></td>
+                        <td class="total-row"></td>
+                        <td class="total-row"></td>
+                        <td class="total-row"></td>
+                        <td class="total-row"></td>
+                        <td class="total-row">{{ sumpayment.payment|floatformat:2 }}</td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <div id="additional-ContractTable-{{ forloop.counter }}" style="display: none" class = "table-container">
+            <table class="receipt-table" border = "2">
+                {% comment %} <thead>
+                    <tr>
+                        <th>งวดที่</th>
+                        <th>วันครบกำหนดชำระ</th>
+                        <th>ค่างวด</th>
+                        <th>เงินต้น</th>
+                        <th>ดอกเบี้ย</th>
+                        <th>ภาษี</th>
+                        <th>วันที่ชำระ</th>
+                        <th>จำนวนยอดชำระ</th>
+                        <th>ยอดคงเหลือ ณ ที่จ่าย</th>
+                    </tr>
+                </thead> {% endcomment %}
+                <tbody>
+                    {% if foo.cont_type == 'E'  %}
+                            <!-- แสดงหน้าตาสำหรับสัญญาเงินกู้ -->
+                            <table class="loan-table">
+                                <thead>
+                                    <tr>
+                                        <th>งวดที่</th>
+                                        <th>วันครบกำหนดชำระ</th>
+                                        <th>ค่างวด</th>
+                                        <th>เงินต้น</th>
+                                        <th>ดอกเบี้ย</th>
+                                        <th>ยอดที่ชำระ</th>
+                                        <th>วันที่ชำระ</th>
+                                        
+                                    </tr>
+                                </thead>
+                                    <tbody>
+                                        {% for i in contract_period %}
+                                        <tr>
+                                            <td class='e'>{{ i.period }}</td>
+                                            <td class='e' style="color: IndianRed " >{{ i.duedayy }}</td>
+                                            <td class='e'>{{ i.installmente }}</td>
+                                            <td class='e'>{{ i.principaa }}</td>
+                                            <td class='e'>{{ i.net_interest }}</td>
+                                            <td class='e'>{{ i.paymentt }}</td>
+                                            <td class='e'>{{ i.paydate }}</td>
+                                            
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                    <tfoot>
+                                        <tr>
+                                            <td colspan="2" class="total-row">ยอดรวม</td>
+                                            <td class="total-row">{{ sumpay|floatformat:2 }}</td>
+                                            <td class="total-row">{{ oppp|floatformat:2 }}</td>
+                                            <td class="total-row">{{ intr|floatformat:2 }}</td>
+                                            <td class="total-row">{{ paymey|floatformat:2 }}</td>
+                                            <td class="total-row"></td>
+                                        </tr>
+                                    </tfoot>
+                                
+                            </table>
+                    {% elif foo.cont_type == 'H' %}
+                                <!-- แสดงหน้าตาสำหรับสัญญาเช่าซื้อ -->
+                                <table class="hire-table">
+                                    <thead>
+                                        <tr>
+                                            <th>งวดที่</th>
+                                            <th>ครบกำหนดชำระวันที่</th>
+                                            <th>ค่างวด</th>
+                                            <th>เงินต้น</th>
+                                            <th>ดอกเบี้ย</th>
+                                            <th>ค่าภาษี</th>
+                                            <th>ยอดที่ชำระ</th>
+                                            <th>วันที่ชำระ</th>
+                                            <th>เงินต้นคงเหลือ</th>
+                                        </tr>
+                                    </thead> 
+                                        <tbody>
+                                            {% for i in result_detail_h %}
+                                            <tr>
+                                                <td class='h'>{{ i.period }}</td>
+                                                <td class='h' style="color: IndianRed ">{{ i.duedayy }}</td>
+                                                <td class='h'>{{ i.installmenpay }}</td>
+                                                <td class='h'>{{ i.prici }}</td>
+                                                <td class='h'>{{ i.inter }}</td>
+                                                <td class='h'>{{ i.instalmen }}</td>
+                                                <td class='h'>{{ i.payma }}</td>
+                                                <td class='h'>{{ i.paymenttday }}</td>
+                                                <td class='h'>{{ i.balance }}</td>
+                                            </tr>
+                                            {% endfor %}
+                                        </tbody>
+                                        <tfoot>
+                                            <tr>
+                                                <td colspan="2" class="total-row">ยอดรวม</td>
+                                                <td class="total-row">{{ suminstallment.installment|floatformat:2 }}</td>
+                                                <td class="total-row">{{ suminstallment.pricip|floatformat:2 }}</td>
+                                                <td class="total-row">{{ suminstallment.intert|floatformat:2 }}</td>
+                                                <td class="total-row">{{ suminstallment.v_instal|floatformat:2 }}</td>
+                                                <td class="total-row">{{ suminstallment.payment|floatformat:2 }}</td>
+                                                <td class="total-row"></td>
+                                                <td class="total-row"></td>
+                                            </tr>
+                                        </tfoot>
+                                </table>
+                    {% endif %}
+
+                    {% comment %} <tr>
+                        <td class="tb"><strong>{{ foo.period }}</strong></td>
+                        <td class="tb"><strong>{{ foo.duedate }}</strong></td>
+                        <td class="tb"><strong>{{ foo.installmente }}</strong></td>
+                        <td class="tb"><strong>{{ foo.net_principaa }}</strong></td>
+                        <td class="tb"><strong>{{ foo.net_interest }}</strong></td>
+                        <td class="tb"><strong>{{ foo.fee_due }}</strong></td>
+                        <td class="tb"><strong>{{ foo.paymentday }}</strong></td>
+                        <td class="tb"><strong>{{ foo.paymentt }}</strong></td>
+                        <td class="tb"><strong>{{ foo.balancepricipal }}</strong></td>
+                    </tr>         {% endcomment %}
+                    {% comment %} {% endfor %}    {% endcomment %}
                 </tbody>
             </table>
         </div>
@@ -247,9 +418,22 @@
     {% endfor %} {% endcomment %}
 
     <script>
-      function toggleDetails(index) {
+      {% comment %} function toggleDetails(index) {
         const details = document.getElementById("additional-details-" + index);
         const icon = document.getElementById("toggle-icon-" + index);
+        if (details.style.display === "none") {
+          details.style.display = "block";
+          icon.classList.remove("fa-angle-down");
+          icon.classList.add("fa-angle-up");
+        } else {
+          details.style.display = "none";
+          icon.classList.remove("fa-angle-up");
+          icon.classList.add("fa-angle-down");
+        }
+      }
+      function toggleInformation(index) {
+        const details = document.getElementById("additional-information-" + index);
+        const icon = document.getElementById("toggle-icon+" + index);
         if (details.style.display === "none") {
           details.style.display = "block";
           icon.classList.remove("fa-angle-down");
@@ -272,7 +456,78 @@
           icon.classList.remove("fa-angle-up");
           icon.classList.add("fa-angle-down");
         }
+      } {% endcomment %}
+      
+      function toggleSection(type, index) {
+        const typeConfig = {
+          details: {
+            detailId: 'additional-details-',
+            iconId: 'toggle-icon-'
+          },
+          information: {
+            detailId: 'additional-information-',
+            iconId: 'toggle-icon+'
+          },
+          history: {
+            detailId: 'additional-',
+            iconId: 'toggle-icon_'
+          },
+          contractTable: {
+            detailId: 'additional-ContractTable-',
+            iconId: 'toggle-icon--'
+          }
+        };
+    
+        const config = typeConfig[type];
+        if (!config) return;
+    
+        const detailId = config.detailId + index;
+        const iconId = config.iconId + index;
+    
+        const targetDetail = document.getElementById(detailId);
+        const targetIcon = document.getElementById(iconId);
+    
+        const cardElement = document.getElementById('card-' + index);
+    
+        const allDetails = cardElement.querySelectorAll('[id^="additional-"]');
+        const allIcons = cardElement.querySelectorAll('[id^="toggle-icon"]');
+    
+        const isAlreadyOpen = targetDetail.style.display === "block";
+    
+        // ปิดกล่องอื่นในการ์ดเดียวกัน
+        allDetails.forEach(el => el.style.display = "none");
+        allIcons.forEach(icon => {
+          icon.classList.remove("fa-angle-up");
+          icon.classList.add("fa-angle-down");
+        });
+    
+        // ถ้ายังไม่เปิด กลับมาเปิด
+        if (!isAlreadyOpen) {
+          targetDetail.style.display = "block";
+          targetIcon.classList.remove("fa-angle-down");
+          targetIcon.classList.add("fa-angle-up");
+        }
       }
+      
+      
+      document.addEventListener("DOMContentLoaded", function () {
+        var inputField = document.getElementById("id_card_no"); // ตรวจสอบ ID ของ input
+        var charCount = document.getElementById("charCount");
+    
+        if (inputField && charCount) {
+            inputField.addEventListener("input", function () {
+                var length = inputField.value.length;
+                charCount.textContent = length + "/13";
+    
+                if (length === 13) {
+                    charCount.style.color = "green"; // ✅ ตัวเลขถูกต้อง -> สีเขียว
+                } else {
+                    charCount.style.color = "red"; // ❌ ตัวเลขผิด -> สีแดง
+                }
+            });
+        }
+    });
+      
     
     </script>
   </body>

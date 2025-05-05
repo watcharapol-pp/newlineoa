@@ -1,6 +1,6 @@
 body {
     font-family: Arial, sans-serif;
-    background: linear-gradient(to right, #5b9bd5 0%, #a7c7f2 50%, #ffd966 100%);
+    background: linear-gradient(to right, #828b95 0%, #aec2dc 50% 100%);
     flex-direction: column;
     padding: 20px;
     display: block;
@@ -13,7 +13,7 @@ body {
 }
 
 .form-container {
-    /* width: 100%; */
+    width: 90%;
     max-width: 500px;
     background: white;
     padding: 20px;
@@ -29,20 +29,32 @@ body {
 }
 
 
-/* .container {
-    display: flex;
-    flex-direction: column; 
-    align-items: center; 
-    width: 100%;
-    max-width: 600px; 
-} */
-
 h1 {
+    font-family: 'Yeseva One', cursive;
     color: #0f57db;
     font-size: 30px;
     text-align: center;
     margin-bottom: 1px;
 }
+
+li {
+    font-size: 18px; /* ขนาดใหญ่ขึ้นเล็กน้อย */
+    font-weight: bold; 
+    padding: 5px 10px; 
+    border: 3px solid #4e3bfe; /* กรอบสีเทาอ่อน (เหมือน span) */
+    border-radius: 5px; /* ขอบโค้งมน */
+    background-color: #ebe9e9; /* สีพื้นหลังอ่อน */
+    /* display: inline-block; ทำให้ li มีลักษณะเป็นกล่องแบบเดียวกับ span */
+    /* margin: 5px; เพิ่มระยะห่างระหว่าง li */
+    /* list-style: none;  */
+}
+
+/* ถ้าต้องการให้แสดงเป็นบล็อกเต็มความกว้าง */
+li.block-style {
+    display: block; /* แสดงเป็นบล็อก */
+    width: fit-content; /* ให้กว้างพอดีกับเนื้อหา */
+}
+
 
 form {
     display: flex;
@@ -51,13 +63,17 @@ form {
 }
 
 input[type="text"] {
+    width: 100%; 
     padding: 10px;
     font-size: 16px;
     border: 1px solid #ccc;
     border-radius: 5px;
+
+    max-width: 300px; /* ไม่ให้ใหญ่เกินไป */
+    box-sizing: border-box; 
 }
 
-button {
+.submitbtn {
     padding: 10px;
     background: linear-gradient(to right, #0044cc, #66a3ff);  /* ไล่สีจากฟ้าไปเหลือง */
     color: white;
@@ -72,41 +88,71 @@ button {
     /* transition: transform 0.2s ease, background 0.3s ease; */
 }
 
-button:hover {
-    background-color: #0056b3;
+.receiptbtn {
+    padding-left: 10px;
+    background: linear-gradient(to right, #0044cc, #66a3ff);  /* ไล่สีจากฟ้าไปเหลือง */
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    /* font-size: 16px;
+    font-weight: bold; */
+    text-align: center;
+    display: block; 
+    margin: 10px auto; /* จัดให้อยู่กลาง */
+    /* transition: transform 0.2s ease, background 0.3s ease; */
 }
-
 
 .form-control {
     margin-top: 10px; 
 }
+.card-0 { background-color: #95a6fa; } /* น้ำเงินสด */
+.card-0 table { background-color: rgb(255, 255, 255); }
+
+.card-1 { background-color: #d0d8ff; }
+.card-1 table { background-color: rgb(255, 255, 255); }
+
+.card-2 { background-color: #95a6fa; }
+.card-2 table { background-color: rgb(255, 255, 255); }
+
+.card-3 { background-color: #d0d8ff; }
+.card-3 table { background-color: rgb(255, 255, 255); }
+
+.card-4 { background-color: #95a6fa; }
+.card-4 table { background-color: rgb(255, 255, 255); }
+
+.card-5 { background-color: #d0d8ff; }
+.card-5 table { background-color: rgb(255, 255, 255); }
+
+.card-6 { background-color: #95a6fa; }
+.card-6 table { background-color: rgb(255, 255, 255); }
+
+.card-7 { background-color: #d0d8ff; }
+.card-7 table { background-color: rgb(255, 255, 255); }
+
+.card-8 { background-color: #95a6fa; }
+.card-8 table { background-color: rgb(255, 255, 255); }
+
+.card-9 { background-color: #d0d8ff; }
+.card-9 table { background-color: rgb(255, 255, 255); }
+
+
+
+
+
+
 
 .card {
-    max-width: 600px;
-    /* width: min(90%, 600px);  */
-    background: white !important;
+    max-width: 800px;
     border-radius: 10px;
     padding: 20px;
     margin: 30px auto; 
     align-items: center;
     justify-content: center;
     box-sizing: border-box; 
-    /* display: flex; */
-    /* flex-direction: column; */
     clear : both;
 }
-/* .card {
-    width: min(90%, 600px); 
-    background: white !important;
-    border-radius: 10px;
-    padding: 20px;
-    margin: 30px auto; 
-    box-sizing: border-box; 
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-} */
+
 @media screen and (max-width: 480px) {
     .card {
         width: 95%; 
@@ -114,26 +160,23 @@ button:hover {
     }
 }
 
-/* .card-content {
-
-    display: flex;
-    flex-grow: 1;
-    flex-direction: column;
-    gap: 8px;
-    
-} */
-
 
 .table-container {
     width: 100%;
     overflow-x: auto; /* เปิดให้เลื่อนแนวนอน */
-    white-space: nowrap; /* ป้องกันการตัดบรรทัด */
+    white-space: nowrap; 
 }
 
 table {
     width: 100%;
     border-collapse: collapse;
     min-width: 600px; /* ป้องกันการหดเล็กเกินไป */
+    border-spacing: 8px; /* กำหนดระยะห่างระหว่างเซลล์ */
+    border-radius: 8px; /* ทำให้มุมโค้ง */
+    overflow: hidden; /* ป้องกันขอบมน */
+    border: 1px solid #949494; /* กรอบรอบนอก */
+    box-shadow: 0px 4px 8px rgba(117, 117, 117, 0.1); /* เพิ่มเงา */
+    background: rgb(245, 241, 241);
 }
 
 @media screen and (max-width: 768px) {
@@ -156,28 +199,50 @@ table {
     border-collapse: collapse;
     text-align: center;
 }
-/* table {
-    width: 100%; 
-    border-collapse: collapse; 
-} */
 
-th, td {
+
+th {
     text-align: center; /* จัดข้อความกึ่งกลาง */
     vertical-align: middle; /* จัดให้อยู่ตรงกลางแนวตั้ง */
     padding: 5px; /* ลดขนาดช่อง */
     font-size: 15px; /* ลดขนาดตัวอักษรเพื่อไม่ให้ล้น */
-    /* border: 1px solid #ffffff;  */
-    /* เพิ่มเส้นขอบ */
     white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
     width: 50%; /* กำหนดขนาดให้ 1/10 ของช่อง */
-}
-
-th {
-    background-color: #4402c8;
+    /* background-color: #3131fbc6; */
+    background: linear-gradient(to right, #1471c8 0%, #519cff 50% 100%);
+    border: 1px solid #3f3f3f; /* กรอบรอบนอก */
     color: white;
 }
+.tb{
+    text-align: center; /* จัดข้อความกึ่งกลาง */
+    vertical-align: middle; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    font-size: 15px; /* ลดขนาดตัวอักษรเพื่อไม่ให้ล้น */
+    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+    width: 60%; /* กำหนดขนาดให้ 1/10 ของช่อง */
+    padding-left: 10px;
+    padding-right: 10px;
+}
+td:first-child {
+    text-align: left;  
+    /* ข้อความ (Label) ชิดซ้าย */
+    font-weight: bold; 
+    /* ทำให้ Label ดูชัดขึ้น */
+    border-bottom: 1px solid #ccc1c1; 
+    /* เส้นแบ่งใต้แต่ละบรรทัด */
+    padding-left: 10px;
+}
+td:last-child {
+    text-align: right;  /* ข้อมูลชิดขวา */
+    word-wrap: break-word; /* บังคับให้ขึ้นบรรทัดใหม่หากยาวเกิน */
+    overflow-wrap: break-word; /* ทำให้ข้อความตัดคำได้ */
+    max-width: 250px; /* กำหนดความกว้างสูงสุด */
+    white-space: normal; /* ป้องกันไม่ให้ข้อความยาวไปทางเดียว */
+    border-bottom: 1px solid #ccc1c1; /* เส้นแบ่งใต้แต่ละบรรทัด */
+    color: #0f892b;
+    padding-right: 10px;
+}
 
-/* ปุ่มโหลดใบเสร็จ */
+/* ปุ่มโหลดใบเสร็จ
 .btn-download {
     background-color: #1731f6;
     color: white;
@@ -190,7 +255,7 @@ th {
 
 .btn-download:hover {
     background-color: #bef126ab;
-}
+} */
 
 .modal {
     display: none; 
@@ -221,13 +286,136 @@ th {
 }
 
 /* ปุ่มในโมดอล */
-.modal-buttons button {
+/* .modal-buttons button {
     margin: 10px;
     padding: 10px 20px;
     cursor: pointer;
     border: none;
     border-radius: 5px;
-}
+} */
 
 .btn-confirm { background-color: #28a745; color: white; }
 .btn-cancel { background-color: #dc3545; color: white; }
+
+
+/* navbar */
+.navbar {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 20px;
+}
+
+
+/* กำหนดพื้นฐานของปุ่มเฉพาะพวกนี้ */
+.custom-button {
+    flex: 1 1 200px; /* กำหนดความยืดหยุ่นให้ปุ่ม */
+    max-width: 100%;
+    box-sizing: border-box;
+    padding: 10px 16px;
+    border: none;
+    border-radius: 8px;
+    color: white;
+    font-weight: bold;
+    cursor: pointer;
+  }
+
+/* สีปุ่มแยกตามลำดับ */
+  .info-button {
+    background-color: #3674B5;
+    border: 3px solid #275381; /* เส้นขอบเทาเข้ม */
+    border-radius: 10px;
+  }
+  
+  .history-button {
+    background-color: #578FCA;
+    border: 3px solid #33567c; /* เส้นขอบเขียวเข้ม */
+    border-radius: 10px;
+  }
+  
+  .details-button {
+    background-color: #4D55CC;
+    border: 3px solid #3741cd; /* เส้นขอบน้ำเงินเข้ม */
+    border-radius: 10px;
+  }
+  .contract-button {
+    background-color: #7A73D1;
+    border: 3px solid #6760d0;
+    border-radius: 10px;
+  }
+  .security-button {
+    background-color: #7A73D1;
+    border: 3px solid #6760d0;
+    border-radius: 10px;
+  }
+
+/* เพิ่มเอฟเฟกต์ hover เล็กน้อย */
+.custom-button:hover {
+  opacity: 0.85;
+}
+
+.navbar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 10px;
+    justify-content: flex-start;
+  }
+
+/* เงินกู้และเช่าซื้อ */
+.e {
+    text-align: center; /* จัดข้อความกึ่งกลาง */
+    vertical-align: middle; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    font-size: 15px; /* ลดขนาดตัวอักษรเพื่อไม่ให้ล้น */
+    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+    width: 60%; /* กำหนดขนาดให้ 1/10 ของช่อง */
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold; 
+    /* ทำให้ Label ดูชัดขึ้น */
+    border-bottom: 1px solid #ccc1c1; 
+    border: 1px solid #949494; /* เส้นขอบแต่ละช่อง */
+    background-color: #d9fff6;
+}
+.h {
+    text-align: center; /* จัดข้อความกึ่งกลาง */
+    vertical-align: middle; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    font-size: 15px; /* ลดขนาดตัวอักษรเพื่อไม่ให้ล้น */
+    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+    width: 60%; /* กำหนดขนาดให้ 1/10 ของช่อง */
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold; 
+    /* ทำให้ Label ดูชัดขึ้น */
+    border-bottom: 1px solid #ccc1c1; 
+    border: 1px solid #949494; /* เส้นขอบแต่ละช่อง */
+    background-color: #D1F8EF;
+}
+.loan-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    border: 1px solid #949494; /* กรอบรอบนอก */
+}
+.hire-table {
+    width: 100%;
+    border-collapse: collapse;
+    text-align: center;
+    border: 1px solid #949494; /* กรอบรอบนอก */
+}
+
+
+.total-row {
+    text-align: center; /* จัดข้อความกึ่งกลาง */
+    vertical-align: middle; /* จัดให้อยู่ตรงกลางแนวตั้ง */
+    font-size: 15px; /* ลดขนาดตัวอักษรเพื่อไม่ให้ล้น */
+    white-space: nowrap; /* ป้องกันข้อความขึ้นบรรทัดใหม่ */
+    width: 60%; /* กำหนดขนาดให้ 1/10 ของช่อง */
+    padding-left: 10px;
+    padding-right: 10px;
+    font-weight: bold; 
+    /* ทำให้ Label ดูชัดขึ้น */
+    border-bottom: 1px solid #ccc1c1; 
+    border: 1px solid #949494; /* เส้นขอบแต่ละช่อง */
+    background-color: #edf7f5;
+}

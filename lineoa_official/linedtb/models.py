@@ -170,18 +170,16 @@ class Contractpaymentdetail(models.Model):
     payment_date = models.DateField(verbose_name='วันที่ชำระเงิน')
 
     #--------------------------------------------------------------------
-
-    effective_date = models.DateField(verbose_name='วันที่มีผล')
     payfor_id = models.IntegerField(verbose_name='รหัสรูปแบบการจ่าย')
     payfor_code = models.IntegerField(verbose_name='เลขกำกับรูปแบบการจ่าย')
     payfor_type = models.CharField(max_length=255, verbose_name='ชนิดการจ่าย')
     payfor_name = models.CharField(max_length=255, verbose_name='ชื่อของการจ่าย')
+    cont_type = models.CharField(max_length=255, verbose_name='ประเภทสัญญา')
 
     payment = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='จำนวนเงินที่จ่าย')
     net_payment = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='รายจ่ายสุทธิ')
     vat_payment = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ค่า vat แยก')
     discount = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ส่วนลด')
-    withholding_tax = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ภาษี')
     total_payment = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ยอดชำระทั้งหมด')
     principal_paid = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='เงินต้นที่ชำระแล้ว')
     principal_over_due = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='เงินต้นค้างชำระ')
@@ -195,18 +193,15 @@ class Contractpaymentdetail(models.Model):
     fee_paid = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ค่าธรรมเนียมที่ชำระแล้ว')
     principal_balance = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ยอดเงินต้นคงเหลือ')
     penalty = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ค่าปรับ')
-    first_partial = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ยอดชำระบางส่วนครั้งแรก')
     first_period = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ลำดับงวดแรกที่ชำระ')
-    last_partial = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ยอดชำระบางส่วนครั้งสุดท้าย')
     last_period = models.DecimalField(max_digits=15, decimal_places=2, verbose_name='ลำดับงวดสุดท้ายที่ชำระ')
     status = models.CharField(max_length=50, verbose_name='สถานะการชำระ')
     status_name = models.CharField(max_length=50, verbose_name='ชื่อสถานะการชำระ')
     next_due_date = models.DateField(verbose_name='วันครบกำหนดถัดไป')
-    created_at = models.DateTimeField(auto_now_add=True, verbose_name='สร้างเมื่อ')
-    updated_at = models.DateTimeField(auto_now=True, verbose_name='อัปเดตเมื่อ')
+    
 
     class Meta:
-        db_table = 'View_PaymentDetail'
+        db_table = 'LineOA_ViewPaymentDetail'
         managed = False
 
 

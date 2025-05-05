@@ -1,5 +1,120 @@
 from django.db import models
 from datetime import datetime
+from django.db.models import Sum
+
+
+class Loan_Penalty_BOT(models.Model):
+    contract_id = models.IntegerField(default=0, null=True, blank=True)
+    contract_detail_id = models.IntegerField(default=0, null=True, blank=True)
+    period_id = models.IntegerField(default=0, null=True, blank=True)
+    period = models.IntegerField(default=0, null=True, blank=True)
+    start_date = models.DateField(null=True, blank=True)
+    end_date = models.DateField(null=True, blank=True)
+    due_date = models.DateField(null=True, blank=True)
+    due_days = models.IntegerField(default=0, null=True, blank=True)
+    installment = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    principal_balance = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    principal_effect = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    principal = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    interest = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    int_current = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    int_suspend = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    fee = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    cover_date = models.DateField(null=True, blank=True)
+    cover_amount = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    payment_date = models.DateField(null=True, blank=True)
+    payment = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    principal_paid = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    interest_paid = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    int_current_paid = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    int_suspend_paid = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    fee_paid = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    net_principal = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    penalty_day = models.IntegerField(default=0, null=True, blank=True)
+    penalty_amount = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    penalty_paid_date = models.DateField(null=True, blank=True)
+    penalty_paid = models.DecimalField(max_digits=18, decimal_places=2, default=0, null=True, blank=True)
+    record_type = models.CharField(max_length=1, default='D', null=True, blank=True)
+
+    class Meta:
+        managed = False
+
+    
+
+    
+
+    def format_date(self, date_value):
+        if date_value:
+            date_str = str(date_value).strip()  # ลบช่องว่างที่อาจเกิดขึ้น
+
+            try:
+                # ตรวจสอบรูปแบบของวันที่ที่รับเข้ามา
+                if "-" in date_str and len(date_str) == 10:  # ถ้าเป็นรูปแบบ "YYYY-MM-DD"
+                    date_obj = datetime.strptime(date_str, '%Y-%m-%d')  
+                elif len(date_str) == 8 and date_str.isdigit():  # ถ้าเป็น "YYYYMMDD"
+                    date_obj = datetime.strptime(date_str, '%Y%m%d')
+                else:
+                    return "รูปแบบวันที่ไม่ถูกต้อง"
+
+                return date_obj.strftime('%d/%m/%Y')  # แปลงเป็น DD/MM/YYYY
+
+            except ValueError:
+                return "ข้อมูลวันที่ไม่ถูกต้อง"
+
+        return "ไม่มีข้อมูลวันที่"
+    
+    def format_money(self, money):
+
+        if money is not None:
+            return f"{money:,.2f}"  # ใส่, กับ ทศนิยม 2 ตำแหน่ง
+        return "ไม่มียอดคงเหลือ"
+
+    def paydate(self):
+        return self.format_date(self.payment_date)
+    
+    #วันที่ครบกำหนดชำระ
+    def duedayy(self):
+        return self.format_date(self.due_date)
+    
+    #เงินต้น
+    def prici(self):
+        return self.format_money(self.principal)
+    
+    #ดอกเบี้ย
+    def inter(self):
+        return self.format_money(self.interest)
+    
+    #ค่าธรรมเนียม
+    # def feee(self):
+    #     return self.format_money(self.fee)
+    
+    #ยอดภาษีมูลค่าเพิ่ม
+    # def instalmen(self):
+    #     return self.format_money(self.vat_installment)
+    
+    #ยอดเงินต้นคงเหลือก่อนชำระ
+    def balancepricipal(self) :
+        return self.format_money(self.principal_balance)
+    
+    #จำนวนยอดเงินต้นที่จ่ายแล้วล่าสุด
+    def principaa(self) :
+        return self.format_money(self.principal)
+    
+    #ยอดดอกเบี้ยสุทธิ
+    def net_interest(self) :
+        return self.format_money(self.interest)
+    
+    #ยอดที่ต้องชำระของงวดนั้น
+    def installmente(self) :
+        return self.format_money(self.installment)
+    
+    #ยอดที่จ่ายมา
+    def paymentt(self) :
+        return self.format_money(self.payment)
+    
+    # def pay(self) :
+    #     return self.format_money(self.payment)
+
 
 # Create your models here.
 class LineOA_contract(models.Model):
@@ -105,7 +220,7 @@ class LineOA_contract(models.Model):
             except ValueError:
                 return "ข้อมูลวันที่ไม่ถูกต้อง"
 
-        return "ไม่มีข้อมูลวันที่"
+        return '<span style="color: red;">ไม่มีข้อมูลวันที่</span>'
     
     # วันที่ชำระล่าสุด
     def lastpaydate(self):
@@ -123,6 +238,8 @@ class LineOA_contract(models.Model):
     # จำนวนวันค้างชำระ
     def overduedate(self):
         return self.format_date(self.dpd)
+    
+    
     
     #---------------------------------------------------------------------------------------------------------------------
     #format money
@@ -180,5 +297,27 @@ class LineOA_contract(models.Model):
     # ยอดเงินต้นเกินกำหนดชำระ
     # def prici_overdue(self) :
     #     return self.format_money(self.)
-    
 
+def loan_penalty(contract_id, ar_date, cont_type , contract_detail_id=0 ):
+    try:
+        contract_info = LineOA_contract.objects.get(id=contract_id, cont_type=cont_type)
+    except LineOA_contract.DoesNotExist:
+        contract_info = None
+    if contract_info:
+        if contract_detail_id > 0:
+            if contract_info.sequence_method == 'H':
+                obj_loan_penalty = Loan_Penalty_BOT.objects.raw('''SELECT * FROM Loan_Penalty_BOT(%s, %s, %s) WHERE payment > 0''',
+                                                                [contract_id, ar_date, contract_detail_id])
+            else:
+                obj_loan_penalty = Loan_Penalty_BOT.objects.raw('''SELECT * FROM Loan_Penalty(%s, %s, %s) WHERE payment > 0''',
+                                                                [contract_id, ar_date, contract_detail_id])
+        else:
+            if contract_info.sequence_method == 'H':
+                obj_loan_penalty = Loan_Penalty_BOT.objects.raw('''SELECT * FROM Loan_Penalty_BOT(%s, %s, default) WHERE payment > 0''',
+                                                                [contract_id, ar_date])
+            else:
+                obj_loan_penalty = Loan_Penalty_BOT.objects.raw('''SELECT * FROM Loan_Penalty(%s, %s, default) WHERE payment > 0''',
+                                                                [contract_id, ar_date])
+    else:
+        obj_loan_penalty = None
+    return obj_loan_penalty

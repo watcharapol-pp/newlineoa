@@ -46,6 +46,8 @@ INSTALLED_APPS = [
     'line_detailpayment',
     # 'line_reciept_pdf',
     'line_pdf',
+    'line_contractdetail',
+    'contractline_noteff',
 
 ]
 
@@ -88,10 +90,12 @@ WSGI_APPLICATION = 'lineoa_official.wsgi.application'
 DATABASES = {
     'default': {
         'ENGINE': 'mssql',
-        'NAME': 'NCAP_20230923',
+        'NAME': 'NCAP_202406',
+                # 'NAME': 'NCAP_20230923',
         'USER': 'sa',
         'PASSWORD': 'Server*1',
-        'HOST': '103.253.75.218\\mssqlserverv2012',
+        # 'HOST': '192.168.1.110',
+        'HOST': '103.253.75.218\\mssqlserverv2012,1533',
         'OPTIONS': {
             'driver': 'ODBC Driver 17 for SQL Server',
         },
